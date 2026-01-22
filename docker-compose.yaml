@@ -1,0 +1,39 @@
+version: '3.8'
+
+services:
+  # FastAPI приложение
+  backend:
+    build: .
+    container_name: vedo_backend
+    restart: unless-stopped
+    volumes:
+      - ./storage:/app/storage
+      - ./logs:/app/logs
+      - ./vedo.db:/app/vedo.db
+    env_file:
+      - .env
+    networks:
+      - vedo_network
+    depends_on:
+      - nginx
+
+  # Nginx веб-сервер
+  nginx:
+    image: nginx:alpine
+    container_name: vedo_nginx
+    restart: unless-stopped
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./static:/usr/share/nginx/html/static:ro
+    networks:
+      - vedo_network
+
+networks:
+  vedo_network:
+    driver: bridge
+
+volumes:
+  storage:
+  logs:

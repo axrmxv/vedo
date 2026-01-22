@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vedo Calculator</title>
+    <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+    <!-- Страница авторизации -->
+    <div id="loginPage" class="page active">
+        <div class="login-container">
+            <div class="login-box">
+                <div class="logo">Vedo</div>
+                <h1>Вход в систему</h1>
+                <form id="loginForm">
+                    <div class="form-group">
+                        <label for="username">Логин</label>
+                        <input type="text" id="username" name="username" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Пароль</label>
+                        <input type="password" id="password" name="password" required>
+                    </div>
+                    <div id="loginError" class="error-message"></div>
+                    <button type="submit" class="btn btn-primary">Войти</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Главная страница -->
+    <div id="mainPage" class="page">
+        <header class="header">
+            <div class="header-left">
+                <h1 class="logo">Vedo</h1>
+            </div>
+            <div class="header-right">
+                <span id="userName" class="user-name"></span>
+                <button id="adminBtn" class="btn btn-secondary" style="display: none;">Администрирование</button>
+                <button id="logoutBtn" class="btn btn-secondary">Выход</button>
+            </div>
+        </header>
+
+        <main class="main-content">
+            <div class="content-grid">
+                <!-- Загрузка файлов -->
+                <div class="card">
+                    <h2>Загрузить файл</h2>
+                    <form id="uploadForm" class="upload-form">
+                        <div class="file-input-wrapper">
+                            <input type="file" id="fileInput" accept=".txt,.xlsx" required>
+                            <label for="fileInput" class="file-label">
+                                <span id="fileName">Выберите файл (.txt или .xlsx)</span>
+                            </label>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Обработать файл</button>
+                    </form>
+                    <div id="uploadStatus" class="status-message"></div>
+                </div>
+
+                <!-- Список файлов -->
+                <div class="card">
+                    <h2>Мои файлы</h2>
+                    <div id="filesList" class="files-list">
+                        <p class="loading">Загрузка...</p>
+                    </div>
+                    <div id="pagination" class="pagination"></div>
+                </div>
+            </div>
+        </main>
+
+        <footer class="footer">
+            <p>&copy; 2025 Vedo. Система автоматического расчёта.</p>
+        </footer>
+    </div>
+
+    <!-- Страница администратора -->
+    <div id="adminPage" class="page">
+        <header class="header">
+            <div class="header-left">
+                <h1 class="logo">Vedo</h1>
+                <span class="page-title">Администрирование</span>
+            </div>
+            <div class="header-right">
+                <button id="backToMainBtn" class="btn btn-secondary">Назад</button>
+                <button id="adminLogoutBtn" class="btn btn-secondary">Выход</button>
+            </div>
+        </header>
+
+        <main class="main-content">
+            <div class="content-grid">
+                <!-- Создание пользователя -->
+                <div class="card">
+                    <h2>Создать пользователя</h2>
+                    <form id="createUserForm">
+                        <div class="form-group">
+                            <label for="newUsername">Логин</label>
+                            <input type="text" id="newUsername" name="username" required minlength="3">
+                        </div>
+                        <div class="form-group">
+                            <label for="newUserRole">Роль</label>
+                            <select id="newUserRole" name="role">
+                                <option value="user">Пользователь</option>
+                                <option value="admin">Администратор</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Создать</button>
+                    </form>
+                    <div id="createUserStatus" class="status-message"></div>
+                </div>
+
+                <!-- Список пользователей -->
+                <div class="card">
+                    <h2>Список пользователей</h2>
+                    <div id="usersList" class="users-list">
+                        <p class="loading">Загрузка...</p>
+                    </div>
+                    <div id="usersPagination" class="pagination"></div>
+                </div>
+            </div>
+        </main>
+
+        <footer class="footer">
+            <p>&copy; 2025 Vedo. Панель администратора.</p>
+        </footer>
+    </div>
+
+    <!-- Модальное окно для данных нового пользователя -->
+    <div id="userModal" class="modal">
+        <div class="modal-content">
+            <h2>Пользователь создан</h2>
+            <div class="user-credentials">
+                <p><strong>Логин:</strong> <span id="modalUsername"></span></p>
+                <p><strong>Пароль:</strong> <span id="modalPassword"></span></p>
+            </div>
+            <p class="modal-note">Сохраните эти данные. Пароль показывается только один раз.</p>
+            <button id="closeModalBtn" class="btn btn-primary">Закрыть</button>
+        </div>
+    </div>
+
+    <!-- Модальное окно для редактирования пользователя -->
+    <div id="editModal" class="modal">
+        <div class="modal-content">
+            <h2>Редактировать пользователя</h2>
+            <form id="editUserForm">
+                <input type="hidden" id="editUserId" name="userId">
+                <div class="form-group">
+                    <label for="editUsername">Логин</label>
+                    <input type="text" id="editUsername" name="username" required minlength="3">
+                </div>
+                <div class="form-group">
+                    <label for="editUserRole">Роль</label>
+                    <select id="editUserRole" name="role">
+                        <option value="user">Пользователь</option>
+                        <option value="admin">Администратор</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="editPassword">Новый пароль (оставьте пустым, чтобы не менять)</label>
+                    <input type="password" id="editPassword" name="password" minlength="6">
+                </div>
+                <div class="modal-buttons">
+                    <button type="submit" class="btn btn-primary">Сохранить</button>
+                    <button type="button" id="closeEditModalBtn" class="btn btn-secondary">Отмена</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="/static/app.js"></script>
+</body>
+</html>
