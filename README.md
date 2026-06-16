@@ -1,6 +1,6 @@
-# Vedo Calculator - MVP Веб-приложение
+# Vedo Calculator
 
-Система автоматического расчёта параметров изделий с распределением по отсечкам.
+Система автоматического расчета параметров изделий с распределением по отсечкам.
 
 ## Возможности
 
@@ -33,7 +33,7 @@ cp .env.example .env
 
 Отредактируйте `.env` файл и обязательно измените `SECRET_KEY`:
 ```bash
-SECRET_KEY=your-very-secret-and-random-key-here
+SECRET_KEY=your-secret-key
 ```
 
 3. **Запуск с помощью Docker Compose**
@@ -228,4 +228,4 @@ ENVIRONMENT=development
 
 ---
 
-**Vedo Calculator v1.0.0** - Система автоматического расчёта для строительной отрасли
+**Vedo Calculator v1.0.0**
